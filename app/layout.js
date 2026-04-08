@@ -1,4 +1,7 @@
 import './globals.css'
+import '@fontsource/instrument-sans/500.css'
+import '@fontsource/instrument-sans/600.css'
+import '@fontsource/instrument-sans/700.css'
 
 export const metadata = {
   icons: {
@@ -19,7 +22,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-black antialiased">{children}</body>
     </html>
   )
 }

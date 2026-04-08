@@ -1,79 +1,84 @@
 'use client'
 
-import Link from 'next/link'
+import CtaOutlineButton from '@/components/CtaOutlineButton'
 
 export default function Hero() {
   return (
-    <section id="home" className="relative py-16 lg:py-60 flex items-center justify-center  px-6 overflow-hidden bg-[#000000]">
-      {/* Background gradient - subtle black to dark red/burgundy */}
-      
-      <div className="absolute inset-0 bg-gradient-to-b from-[#000000] via-[#000000] to-[#1a0000]">
-        {/* Subtle particles */}
-        <div className="absolute inset-0">
-          {[...Array(60)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-0.5 h-0.5 bg-white rounded-full opacity-40"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animation: `twinkle ${3 + Math.random() * 4}s infinite`,
-                animationDelay: `${Math.random() * 2}s`,
-              }}
-            />
-          ))}
-        </div>
+    <section
+      id="home"
+      className="relative flex min-h-[100svh] flex-col items-center overflow-hidden bg-[#030102] px-6 pb-8 pt-28 md:pb-12 md:pt-32"
+    >
+      {/* Maroon dot mesh + glow — static, top 50% only */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[50%] overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_82%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_82%,transparent_100%)]"
+        aria-hidden
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `
+              radial-gradient(ellipse 110% 95% at 50% -18%, rgba(130, 48, 65, 0.72) 0%, rgba(85, 28, 42, 0.42) 38%, rgba(45, 16, 26, 0.18) 58%, transparent 78%),
+              radial-gradient(ellipse 60% 52% at 22% 4%, rgba(100, 34, 50, 0.48) 0%, transparent 55%),
+              radial-gradient(ellipse 60% 52% at 78% 6%, rgba(100, 34, 50, 0.45) 0%, transparent 55%),
+              linear-gradient(to bottom, rgba(75, 24, 38, 0.25) 0%, transparent 45%)
+            `,
+          }}
+        />
+        <div className="hero-dot-mesh absolute inset-0 opacity-[0.58] blur-[0.35px]" />
+        <div className="hero-dot-mesh-fine absolute inset-0" />
       </div>
 
-      {/* Main Container - Two Column Layout */}
-      <div className="relative z-10 container  mx-auto ">
-        <div className="flex flex-col-reverse md:flex-row items-center justify-center gap-12 lg:gap-16">
-          {/* Content - Left Side */}
-          <div className="w-full md:w-2/5 lg:w-2/4">
-            <h1 className="text-4xl md:text-5xl lg:text-[54px] font-bold mb-4 md:mb-6 leading-tight text-left">
-              <span className="text-white">Every click is an entry point</span>
-              <br />
-              <span className="text-[#DC2626]">We close every one of them</span>
-            </h1>
-            
-            <p className="text-base md:text-lg lg:text-xl text-gray-400 mb-6 md:mb-8 leading-relaxed font-light text-left max-w-2xl">
-              In today&apos;s connected world, every organization faces invisible risks. 
-              SentriMorph delivers intelligent protection that shields your data, infrastructure, 
-              and reputation — so you can focus on growth while we guard every digital doorway.
-            </p>
-            
-            <div className="text-left">
-              <Link 
-                href="#contact"
-                className="inline-block px-8 py-3 bg-black border border-white text-white text-sm font-medium hover:bg-[#DC2626]  transition-colors"
-              >
-                Get In Touch
-              </Link>
-            </div>
-          </div>
+      {/* Copy — centered; title largest, body ~⅓ title size, generous vertical rhythm */}
+      <div className="relative z-10 mt-10 mx-auto flex w-full max-w-4xl flex-col items-center text-center">
+        <h1 className="mb-10 text-balance md:mb-14 lg:mb-6">
+          <span className="block text-[1.75rem] font-bold leading-[1.15] tracking-tight text-white sm:text-4xl sm:leading-[1.12] md:text-5xl lg:text-[3.25rem] lg:leading-[0.6]">
+            Every click is an entry point
+          </span>
+          <span className="mt-2 block text-[1.75rem] font-light leading-[1.2] tracking-tight text-[#FF4D6D] sm:mt-3 sm:text-[1.6rem] md:text-3xl md:leading-[1.18] lg:mt-4 lg:text-[3.125rem] lg:leading-[1.15]">
+            We close every one of them
+          </span>
+        </h1>
 
-          {/* Globe Graphic - Right Side - Full Size */}
-          <div className="w-full md:w-3/5 lg:w-2/4 relative">
-            <div className="relative w-full h-full flex items-center justify-center">
-              {/* Outer glow effect */}
-              <div className="absolute inset-0 bg-[#DC2626]/10 rounded-full blur-3xl" />
-              
-              {/* Globe sphere with grid structure */}
-              <div className="relative w-full h-full">
-                <img src="/images/Every-click2.png" alt="Globe" className="w-full h-full " />
-              </div>
-            </div>
-          </div>
-        </div>
+        <p className="mb-12 max-w-2xl text-pretty text-base font-normal leading-[1.75] text-gray-400 md:mb-16 md:text-[1.0625rem] md:leading-[1.7]">
+          In today&apos;s connected world, every organization faces invisible risks.
+          SentriMorph delivers intelligent protection that shields your data,
+          infrastructure, and reputation — so you can focus on growth while we guard
+          every digital doorway.
+        </p>
+
+        <CtaOutlineButton href="#contact">Get In Touch</CtaOutlineButton>
       </div>
 
-      <style jsx>{`
-        @keyframes twinkle {
-          0%, 100% { opacity: 0.2; }
-          50% { opacity: 0.6; }
-        }
-      `}</style>
+      {/* Hero video */}
+      <div className="relative z-[1] mt-10 flex w-full max-w-4xl flex-1 items-end justify-center md:mt-4 lg:max-w-5xl">
+        <div className="relative w-full max-w-[min(94vw,640px)] overflow-hidden bg-[#030102]">
+          {/* Video stays bright; encoded gray matting is covered by matching side/top/bottom strips */}
+          <video
+            className="relative z-[1] h-auto w-full bg-[#030102] object-contain object-bottom brightness-[1.1] contrast-[1.06] saturate-[1.08]"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-hidden
+          >
+            <source src="/video/hero.mp4" type="video/mp4" />
+          </video>
+          {/* Bands match hero bg — hides off-black pixels baked into the file at left/right (and top/bottom) */}
+          <div
+            className="pointer-events-none absolute inset-0 z-[2]"
+            style={{
+              background: `
+                linear-gradient(to right, #030102 0%, #030102 26%, rgba(3,1,2,0.65) 30%, transparent 38%),
+                linear-gradient(to left, #030102 0%, #030102 26%, rgba(3,1,2,0.65) 30%, transparent 38%),
+                linear-gradient(to bottom, #030102 0%, #030102 18%, rgba(3,1,2,0.5) 24%, transparent 32%),
+                linear-gradient(to top, #030102 0%, #030102 16%, rgba(3,1,2,0.5) 22%, transparent 30%)
+              `,
+            }}
+            aria-hidden
+          />
+        </div>
+      </div>
     </section>
   )
 }
-

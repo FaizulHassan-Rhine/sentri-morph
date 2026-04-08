@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Instrument Sans', 'Instrument Sans Placeholder', 'sans-serif'],
+      },
       colors: {
         'cyber-red': '#DC2626',
         'cyber-dark': '#000000',
