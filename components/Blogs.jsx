@@ -5,141 +5,71 @@ import Link from 'next/link'
 
 export default function Blogs() {
   const blogPosts = [
-   
     {
-      id: 2,
-      slug: 'a-guide-to-ai-driven-design-with-nexus',
-      image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&q=80',
+      id: 1,
+      slug: 'what-is-vapt-cybersecurity-guide-2026',
+      image: '/images/blog/blog-vapt.webp',
       category: 'Blogging',
-      date: 'Nov 22, 2023',
-      readTime: '7 min read',
-      title: 'A Guide to AI-Driven Design with Nexus',
-      description: 'Explore the impact of AI on design creativity. This blog post will delve into how Nexus AI.',
-      author: {
-        name: 'Olena Kucherenko',
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80',
-      },
-    },
-    {
-      id: 3,
-      slug: 'enhancing-shopify-stores-with-nexus-ai',
-      image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80',
-      category: 'Blogging',
-      date: 'Dec 27, 2023',
-      readTime: '5 min read',
-      title: 'Enhancing Shopify Stores with Nexus AI',
-      description: 'In the dynamic world of e-commerce, standing out from the crowd is crucial.',
-      author: {
-        name: 'David Johnson',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80',
-      },
-    },
-    {
-      id: 4,
-      slug: 'mobile-app-support-and-nexus-ai',
-      image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&q=80',
-      category: 'ChatGPT',
-      date: 'Dec 6, 2023',
-      readTime: '6 min read',
-      title: 'Mobile App Support and Nexus AI',
-      description: 'In a world where creativity knows no bounds, the ability to design and generate.',
-      author: {
-        name: 'Olena Kucherenko',
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80',
-      },
-    },
-    {
-      id: 5,
-      slug: 'figma-collaboration-reinvented-nexus-ai-integration-guide',
-      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&q=80',
-      category: 'PhotoNexus',
-      date: 'Nov 3, 2023',
-      readTime: '6 min read',
-      title: 'Figma Collaboration Reinvented: Nexus AI Integration Guide',
-      description: 'In the realm of collaborative design, Figma stands as a powerful platform that facilitates teamwork.',
-      author: {
-        name: 'Anastasia Solovyova',
-        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80',
-      },
-    },
-    {
-      id: 6,
-      slug: 'optimizing-design-workflow-nexus-ai-and-framer-integration',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80',
-      category: 'Blogging',
-      date: 'Sep 23, 2023',
-      readTime: '8 min read',
-      title: 'Optimizing Design Workflow: Nexus AI and Framer Integration',
-      description: 'In the dynamic world of design, efficiency is key. Every creative journey is a delicate.',
-      author: {
-        name: 'David Johnson',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80',
-      },
+      date: 'Nov 7, 2023',
+      readTime: '17 min read',
+      title: 'What is VAPT? Complete Cybersecurity Guide for 2026',
+      description:
+        'Learn what VAPT is, how it works, types, process, benefits, and why it\'s crucial for cybersecurity to you.',
     },
   ]
 
   return (
-    <section className="relative py-24 px-6 bg-[#000000]">
+    <section className="relative bg-black pt-28 pb-24 px-6">
       <div className="container mx-auto max-w-7xl">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+        <div className="text-center mb-16 md:mb-20">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Blogs
-          </h2>
-          <p className="text-lg text-gray-400 font-light">
-            Upgrade for extra features and collaboration with your team.
+          </h1>
+          <p className="text-lg text-gray-400 font-light max-w-2xl mx-auto">
+            Read our latest blogs on Cyber Security
           </p>
         </div>
 
-        {/* Blog Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 gap-10 lg:gap-12">
           {blogPosts.map((post) => (
-            <Link key={post.id} href={`/blogs/${post.slug}`}>
-              <article className="bg-[#0a0a0a] rounded-lg overflow-hidden border border-white/5 hover:border-white/20 transition-all cursor-pointer group">
-                {/* Image */}
-                <div className="relative w-full h-48 md:h-56 overflow-hidden bg-gray-900">
+            <Link key={post.id} href={`/blogs/${post.slug}`} className="block group max-w-xl">
+              <article className="h-full flex flex-col rounded-xl overflow-hidden bg-[#0a0a0a] border border-white/[0.06] hover:border-white/15 transition-colors">
+                <div className="relative w-full aspect-[16/10] overflow-hidden bg-[#111]">
                   <Image
                     src={post.image}
-                    alt={post.title}
+                    alt=""
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                   />
                 </div>
 
-                {/* Content */}
-                <div className="p-5 md:p-6">
-                  {/* Metadata */}
-                  <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500 mb-3 font-light">
+                <div className="flex flex-col flex-1 p-6 md:p-7">
+                  <p className="text-sm text-gray-500 font-light">
                     <span>{post.category}</span>
-                    <span>•</span>
+                    <span className="mx-2 text-gray-600">•</span>
                     <span>{post.date}</span>
-                    <span>•</span>
+                    <span className="mx-2 text-gray-600">•</span>
                     <span>{post.readTime}</span>
-                  </div>
+                  </p>
 
-                  {/* Title */}
-                  <h3 className="text-lg md:text-xl font-semibold text-white mb-2 leading-tight group-hover:text-[#DC2626] transition-colors">
+                  <h2 className="text-xl md:text-[1.35rem] font-bold text-white mt-4 leading-snug group-hover:text-[#DC2626] transition-colors">
                     {post.title}
-                  </h3>
+                  </h2>
 
-                  {/* Description */}
-                  <p className="text-sm text-gray-400 mb-4 font-light leading-relaxed line-clamp-2">
+                  <p className="text-gray-400 font-light leading-relaxed mt-3 flex-1 line-clamp-3">
                     {post.description}
                   </p>
 
-                  {/* Author */}
-                  <div className="flex items-center gap-3">
-                    <div className="relative w-7 h-7 md:w-8 md:h-8 rounded-full overflow-hidden ring-1 ring-white/10">
-                      <Image
-                        src={post.author.avatar}
-                        alt={post.author.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <span className="text-xs md:text-sm text-gray-400 font-light">
-                      {post.author.name}
-                    </span>
+                  <div className="flex items-center gap-2.5 mt-8 pt-2">
+                    <img
+                      src="/images/logo.png"
+                      alt=""
+                      className="h-6 w-auto opacity-90"
+                      width={120}
+                      height={24}
+                    />
+                    <span className="text-sm text-gray-500 font-light">SentriMorph</span>
                   </div>
                 </div>
               </article>
@@ -150,4 +80,3 @@ export default function Blogs() {
     </section>
   )
 }
-

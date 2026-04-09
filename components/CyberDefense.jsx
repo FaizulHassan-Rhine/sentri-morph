@@ -1,24 +1,16 @@
 'use client'
 
-import { Lock, FileSearch, Bug, User } from 'lucide-react'
+import { Bug, FileSearch, Lock } from 'lucide-react'
 import Image from 'next/image'
-import { useState, useEffect, useRef } from 'react'
-
-// Custom icon component for padlock with person silhouette
-const LockWithUser = ({ className }) => (
-  <div className={className} style={{ position: 'relative', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    <Lock className="w-full h-full text-white" strokeWidth={1.5} />
-    <User className="absolute bottom-1 left-1/2 -translate-x-1/2 w-5 h-5 text-white" strokeWidth={2.5} fill="white" />
-  </div>
-)
+import { useEffect, useRef, useState } from 'react'
 
 export default function CyberDefense() {
-  const [visibleCards, setVisibleCards] = useState([false, false, false])
-  const cardRefs = useRef([])
+  const sectionRef = useRef(null)
+  const [isVisible, setIsVisible] = useState(false)
 
   const features = [
     {
-      icon: LockWithUser,
+      icon: Lock,
       title: 'Penetration Testing & Exploitation',
       description: 'Simulate real-world attacks to uncover hidden vulnerabilities before adversaries do.',
     },
@@ -35,157 +27,82 @@ export default function CyberDefense() {
   ]
 
   useEffect(() => {
-    const observers = []
+    const sectionEl = sectionRef.current
+    if (!sectionEl) return
 
-    cardRefs.current.forEach((cardRef, index) => {
-      if (!cardRef) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting)
+      },
+      { threshold: 0.22 }
+    )
 
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              // Animate in when entering viewport
-              setVisibleCards((prev) => {
-                const newState = [...prev]
-                newState[index] = true
-                return newState
-              })
-            } else {
-              // Reset animation when leaving viewport
-              setVisibleCards((prev) => {
-                const newState = [...prev]
-                newState[index] = false
-                return newState
-              })
-            }
-          })
-        },
-        {
-          threshold: 0.1,
-          rootMargin: '0px 0px -100px 0px',
-        }
-      )
-
-      observer.observe(cardRef)
-      observers.push(observer)
-    })
-
-    return () => {
-      observers.forEach((observer) => observer.disconnect())
-    }
+    observer.observe(sectionEl)
+    return () => observer.disconnect()
   }, [])
 
   return (
-    <section className="relative py-24 px-6 overflow-hidden bg-[#000000]">
-      {/* Background particles */}
-      <div className="absolute inset-0 z-0">
-        {[...Array(40)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-0.5 h-0.5 bg-white rounded-full opacity-40"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `twinkle ${3 + Math.random() * 4}s infinite`,
-              animationDelay: `${Math.random() * 2}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Frame background graphic - positioned behind title and description */}
-      <div className="absolute top-0 left-0 w-full h-[700px] md:h-[900px] z-0 pointer-events-none overflow-hidden">
-        {/* Mobile Frame */}
-        <div className="relative w-full h-full md:hidden">
+    <section ref={sectionRef} className="relative bg-black px-6 py-6 md:py-20 overflow-hidden">
+      <div className="pointer-events-none absolute inset-x-0 top-[-280px] md:top-[0px] h-[720px] z-0 overflow-hidden">
+        {/* Mobile frame */}
+        <div className="relative h-full w-full md:hidden">
           <Image
             src="/images/frame-mobile.png"
-            alt="Cyber Defense Frame Mobile"
+            alt="Mobile frame background"
             fill
-            className="object-contain object-top"
             priority
-            style={{ objectPosition: 'top center' }}
+            className="object-contain object-top"
           />
         </div>
-        {/* Desktop Frame */}
-        <div className="relative w-full h-full hidden md:block">
+        {/* Desktop frame */}
+        <div className="relative hidden h-full w-full md:block scale-[1.14]">
           <Image
             src="/images/frame.png"
-            alt="Cyber Defense Frame"
+            alt="Desktop frame background"
             fill
-            className="object-contain object-top"
             priority
-            style={{ objectPosition: 'top center' }}
+            className="object-contain object-top"
           />
         </div>
+        <div className="absolute inset-x-0 top-0 h-[700px] bg-[radial-gradient(ellipse_at_top,rgba(117,31,48,0.14)_0%,rgba(0,0,0,0)_62%)]" />
       </div>
 
-      {/* Background glow - elliptical shape from top-right */}
-      <div className="absolute top-0 right-0 w-[600px] h-[800px] bg-[#DC2626]/5 rounded-full blur-3xl -translate-y-1/4 translate-x-1/4 z-0" />
-      
-      <div className=" container pt-32 mx-auto max-w-7xl relative z-10">
-        <div className=" mb-16 relative z-20">
-          <h2 className="text-3xl md:text-4xl text-center  font-bold mb-4">
-            <span className="text-white ">SentriMorph as Your Advanced</span>
+      <div className="relative mx-auto max-w-5xl">
+        <div className="mx-auto mb-14 max-w-3xl text-center pt-16 md:pt-48">
+          <h2 className="text-lg md:text-[3.35rem] font-medium leading-tight text-white tracking-tight">
+            <span className="text-[#DC3A5B]">SentriMorph</span> as Your Advanced
             <br />
-            <span className="text-[#DC2626]">Cyber Defense Partner</span>
+            Cyber Defense Partner
           </h2>
-          <p className="text-lg text-center max-w-3xl mx-auto text-gray-400 leading-relaxed font-light">
-            Protect your business with intelligent, adaptive security. SentriMorph identifies, 
-            responds, and strengthens — turning every threat into an opportunity for resilience.
+          <p className="mx-auto mt-4 w-[75%] md:max-w-xl text-[12px] md:text-[15px] leading-relaxed text-gray-400">
+            Protect your business with intelligent, adaptive security. SentriMorph identifies,
+            responds, and strengthens - turning every threat into an opportunity for resilience.
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto flex flex-col md:flex-row gap-16 justify-center items-center mt-16">
+        <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-10">
           {features.map((feature, index) => {
             const Icon = feature.icon
-            const isCustomIcon = index === 0 // First icon is custom LockWithUser
-            const isVisible = visibleCards[index]
-            
             return (
               <div
-                key={index}
-                ref={(el) => (cardRefs.current[index] = el)}
-                className={`flex flex-col items-start transition-all duration-700 ease-out ${
-                  isVisible
-                    ? 'opacity-100 translate-y-0'
-                    : 'opacity-0 translate-y-10'
+                key={feature.title}
+                className={`mx-auto w-full max-w-[280px] text-left transition-all duration-1000 ease-out ${
+                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                 }`}
-                style={{
-                  transitionDelay: `${index * 150}ms`,
-                }}
+                style={{ transitionDelay: `${index * 220}ms` }}
               >
-                {/* Icon with circular background */}
-                <div className="relative mb-6">
-                  <div className="w-10 h-10 rounded-full bg-black border-2 border-white flex items-center justify-center">
-                    {isCustomIcon ? (
-                      <Icon className="text-white" />
-                    ) : (
-                      <Icon className="w-5 h-5 text-white" strokeWidth={1.5} />
-                    )}
-                  </div>
+                <div className="mb-5 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.03]">
+                  <Icon className="h-4.5 w-4.5 text-white/90" strokeWidth={1.75} />
                 </div>
-                
-                {/* Title */}
-                <h3 className="text-xl font-semibold text-white mb-3">
+                <h3 className="text-[20px] md:text-[26px] leading-[1.08] font-medium tracking-tight text-white">
                   {feature.title}
                 </h3>
-                
-                {/* Description */}
-                <p className="text-gray-400 text-wrap text-start leading-relaxed font-light">
-                  {feature.description}
-                </p>
+                <p className="mt-3 text-[14px] leading-relaxed text-gray-400">{feature.description}</p>
               </div>
             )
           })}
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes twinkle {
-          0%, 100% { opacity: 0.2; }
-          50% { opacity: 0.6; }
-        }
-      `}</style>
     </section>
   )
 }

@@ -1,420 +1,398 @@
 'use client'
 
-import { Calendar, User, Tag, ArrowRight, Plus, Minus } from 'lucide-react'
+import { Home, Plus, Minus } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
-import emailjs from '@emailjs/browser'
+import { useState } from 'react'
+import { vaptArticleContent } from '@/data/vaptArticleContent'
+
+function renderRichText(text) {
+  const parts = String(text).split(/(\*\*[^*]+\*\*)/g)
+  return parts.map((part, idx) => {
+    if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+      return (
+        <strong key={idx} className="font-semibold text-white">
+          {part.slice(2, -2)}
+        </strong>
+      )
+    }
+    return <span key={idx}>{part}</span>
+  })
+}
+
+function ArticleContent({ content }) {
+  const lines = content.split('\n')
+  const blocks = []
+  let i = 0
+  let key = 0
+  let firstTextBlock = true
+
+  while (i < lines.length) {
+    const raw = lines[i]
+    const line = raw.trimEnd()
+    const t = line.trim()
+
+    if (t.startsWith('#### ')) {
+      blocks.push(
+        <h4
+          key={key++}
+          className="text-[1.35rem] sm:text-[1.6rem] font-medium text-white mt-10 mb-4 tracking-tight scroll-mt-28"
+        >
+          {t.slice(5)}
+        </h4>
+      )
+      i++
+      continue
+    }
+    if (t.startsWith('### ')) {
+      blocks.push(
+        <h3
+          key={key++}
+          className="text-[1.35rem] sm:text-[1.6rem] font-medium text-white mt-10 mb-4 tracking-tight scroll-mt-28"
+        >
+          {t.slice(4)}
+        </h3>
+      )
+      i++
+      continue
+    }
+    if (t.startsWith('## ')) {
+      blocks.push(
+        <h2
+          key={key++}
+          className="text-[1.35rem] sm:text-[1.6rem] font-medium text-white mt-10 mb-4 tracking-tight scroll-mt-28"
+        >
+          {t.slice(3)}
+        </h2>
+      )
+      i++
+      continue
+    }
+    if (t.startsWith('- ')) {
+      const items = []
+      while (i < lines.length) {
+        const lt = lines[i].trim()
+        if (!lt.startsWith('- ')) break
+        items.push(lt.slice(2))
+        i++
+      }
+      blocks.push(
+        <ul
+          key={key++}
+          className="list-disc pl-5 sm:pl-6 space-y-3 my-6 text-[15px] sm:text-base text-gray-400 marker:text-[#DC2626]"
+        >
+          {items.map((item, idx) => (
+            <li key={idx} className="leading-relaxed pl-1">
+              {renderRichText(item)}
+            </li>
+          ))}
+        </ul>
+      )
+      continue
+    }
+    if (t === '') {
+      i++
+      continue
+    }
+    if (firstTextBlock) {
+      blocks.push(
+        <h3
+          key={key++}
+          className="text-[1.35rem] sm:text-[1.6rem] font-medium text-white mt-10 mb-4 tracking-tight scroll-mt-28"
+        >
+          {renderRichText(line)}
+        </h3>
+      )
+      firstTextBlock = false
+      i++
+      continue
+    }
+    blocks.push(
+      <p key={key++} className="text-[15px] sm:text-base text-gray-400 leading-[1.75]">
+        {renderRichText(line)}
+      </p>
+    )
+    firstTextBlock = false
+    i++
+  }
+
+  return <div className="space-y-5">{blocks}</div>
+}
 
 const blogData = {
-  'figma-collaboration-reinvented-nexus-ai-integration-guide': {
-    title: 'Figma Collaboration Reinvented: Nexus AI Integration Guide',
-    author: 'Annette Robertson',
-    category: 'Productivity',
-    date: 'November 2, 2023',
-    heroImage: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&q=80',
-    content: `
-      In the realm of collaborative design, Figma stands as a powerful platform that facilitates teamwork and streamlines the design process. With the integration of Nexus AI, teams can now take their collaborative efforts to new heights, leveraging artificial intelligence to enhance productivity and creativity.
-
-      ## The Nexus Advantage in Figma Collaboration
-
-      ### 1. Real-time Content Generation in Figma
-      Nexus AI enables designers to generate content directly within Figma, creating text, images, and UI elements in real-time. This eliminates the need to switch between multiple tools and keeps the entire design workflow within Figma's collaborative environment.
-
-      ### 2. Intelligent Design Suggestions for Cohesion
-      The AI analyzes your design patterns and suggests cohesive elements that match your existing style. This ensures consistency across all team members' contributions, reducing the need for extensive revision cycles.
-
-      ## Setting Up Nexus AI In Your Figma Workspace
-
-      ### 1. Installing the Nexus AI Figma Plugin
-      Installing Nexus AI is straightforward. Simply navigate to the Figma Community, search for "Nexus AI," and click install. The plugin will appear in your Figma plugins menu, ready to enhance your workflow.
-
-      ### 2. Configuring Integration Settings
-      Once installed, configure Nexus AI according to your team's needs. Set up design preferences, content guidelines, and collaboration rules to ensure the AI aligns with your project requirements.
-
-      ## Collaborative Success Stories: Nexus AI in Figma Projects
-
-      ### 1. Streamlining Team Collaboration
-      Teams using Nexus AI report significant improvements in collaboration efficiency. Design iterations happen faster, and team members can focus on creativity rather than repetitive tasks.
-
-      ### 2. Effective Design Review and Feedback
-      Nexus AI facilitates smoother design reviews by generating comprehensive documentation and suggestions automatically, making it easier for stakeholders to provide actionable feedback.
-
-      ## Why Choose AI for Figma Collaboration?
-
-      ### 1. Unified Design Environment
-      Nexus AI keeps everything within Figma, eliminating context switching and maintaining focus on design work.
-
-      ### 2. Enhanced Productivity and Design Quality
-      By automating routine tasks, Nexus AI allows designers to concentrate on strategic thinking and creative problem-solving, resulting in higher-quality designs.
-
-      ## Future Innovations: Nexus AI and Figma's Collaborative Horizon
-
-      ### 1. Continuous Updates and User-Driven Improvements
-      Nexus AI continuously evolves based on user feedback and emerging design trends, ensuring teams always have access to cutting-edge collaborative tools.
-
-      ### 2. Community Engagement: Shaping the Future of Figma Collaboration
-      The Nexus AI community actively contributes to feature development, creating a tool that truly serves the needs of modern design teams.
-
-      ## Conclusion: Elevate Your Collaborative Design Experience
-
-      Integrating Nexus AI with Figma transforms the collaborative design process, enabling teams to work more efficiently and produce exceptional results. Whether you're a solo designer or part of a large team, Nexus AI's intelligent features will enhance your Figma workflow and help you achieve your design goals faster.
-    `,
+  'what-is-vapt-cybersecurity-guide-2026': {
+    title: 'What is VAPT? Complete Cybersecurity Guide for 2026',
+    author: 'SentriMorph',
+    category: 'Blogging',
+    date: 'November 7, 2023',
+    dateDisplay: 'Nov 7, 2023',
+    readTime: '17 min read',
+    breadcrumbLabel: 'what-is-vapt',
+    heroImage: '/images/blog/blog-vapt.webp',
+    content: vaptArticleContent,
   },
 }
 
-const relatedBlogs = [
-  {
-    id: 1,
-    slug: 'this-is-a-post',
-    image: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=600&q=80',
-    category: 'Blogging',
-    date: 'Nov 23, 2023',
-    readTime: '0 min read',
-    title: 'This is a post',
-    author: {
-      name: 'Ivy Shiny',
-      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80',
-    },
-  },
-  {
-    id: 2,
-    slug: 'a-guide-to-ai-driven-design-with-nexus',
-    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&q=80',
-    category: 'Blogging',
-    date: 'Nov 22, 2023',
-    readTime: '7 min read',
-    title: 'A Guide to AI-Driven Design with Nexus',
-    author: {
-      name: 'Clara Carter',
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80',
-    },
-  },
-  {
-    id: 3,
-    slug: 'enhancing-shopify-stores-with-nexus-ai',
-    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80',
-    category: 'Blogging',
-    date: 'Dec 27, 2023',
-    readTime: '5 min read',
-    title: 'Enhancing Shopify Stores with Nexus AI',
-    author: {
-      name: 'David Jensen',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80',
-    },
-  },
-]
+const relatedBlogs = []
 
 const faqs = [
   {
-    question: 'How do I get started with Nexus AI?',
-    answer: 'Getting started with Nexus AI is simple. Install the plugin from the Figma Community, configure your preferences, and start collaborating with AI-powered features.',
+    question: 'What is the difference between Vulnerability Assessment (VA) and Penetration Testing (PT)?',
+    answer:
+      'VA identifies and lists security weaknesses in a system. And PT is trying to exploit those weaknesses to understand how serious they are and what damage they could cause.',
   },
   {
-    question: 'What types of content can Nexus AI generate?',
-    answer: 'Nexus AI can generate text, images, UI elements, and design suggestions that align with your project\'s style and requirements.',
+    question: 'How much does VAPT cost?',
+    answer:
+      'The cost varies based on how big and complex your systems are. Since every organization has unique needs, there is no fixed price. To find out the cost for your situation, you need to contact them directly.',
   },
   {
-    question: 'Is Nexus AI compatible with all Figma plans?',
-    answer: 'Yes, Nexus AI works with all Figma plans, including free, professional, and enterprise tiers.',
+    question: 'Can VAPT be done internally?',
+    answer:
+      'Your team can achieve good results if they have the right skills and tools. Still, many organizations choose to hire outside experts for more detailed insights and unbiased results.',
   },
   {
-    question: 'How does Nexus AI ensure design consistency?',
-    answer: 'Nexus AI analyzes your existing design patterns and suggests elements that match your style, ensuring consistency across all team contributions.',
+    question: 'What are VAPT certifications?',
+    answer:
+      'These are professional credentials that show someone is trained in ethical hacking and security testing. Common ones include CEH, OSCP, and CompTIA Security+.',
   },
   {
-    question: 'Can I customize Nexus AI for my team\'s needs?',
-    answer: 'Absolutely! Nexus AI offers extensive customization options, allowing you to configure design preferences, content guidelines, and collaboration rules.',
+    question: 'Does VAPT guarantee 100% security?',
+    answer:
+      'No. VAPT helps lower risks by finding and fixing known issues, but no system is completely safe. New threats can always appear.',
+  },
+  {
+    question: 'What happens after VAPT?',
+    answer:
+      'You will get a report that details the vulnerabilities found, shows how severe they are, and suggests ways to fix them. Your team can identify these problems and improve security.',
+  },
+  {
+    question: 'What tools are used in VAPT?',
+    answer:
+      'Popular tools include Nessus, Burp Suite, Metasploit, Nikto, OWASP ZAP, etc. Each tool serves a different purpose scanning, exploiting, or analyzing.',
+  },
+  {
+    question: 'Can VAPT cause system downtime?',
+    answer:
+      "It can, especially during aggressive testing. That's why it's usually done in controlled environments or during off-peak hours.",
+  },
+  {
+    question: 'What are the types of VAPT?',
+    answer:
+      'VAPT can target different areas such as networks, web and mobile applications, cloud platforms, APIs, IoT devices, social engineering, and physical security.',
+  },
+  {
+    question: 'How often should VAPT be performed?',
+    answer:
+      'At least once a year, or whenever there are major changes to your systems, new applications are launched, or sensitive data is being handled.',
   },
 ]
 
 export default function BlogDetail({ slug }) {
   const [openFaq, setOpenFaq] = useState(null)
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState(null)
-  
-  const post = blogData[slug] || blogData['figma-collaboration-reinvented-nexus-ai-integration-guide']
 
-  useEffect(() => {
-    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY')
-  }, [])
+  const post = blogData[slug]
 
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index)
   }
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
+  if (!post) {
+    return (
+      <div className="bg-[#000000] pt-24 min-h-screen flex items-center justify-center px-6">
+        <div className="text-center max-w-md">
+          <h1 className="text-3xl font-bold text-white mb-4">Article not found</h1>
+          <p className="text-gray-400 mb-8">This blog post does not exist or has been moved.</p>
+          <Link href="/blogs" className="text-[#DC2626] hover:underline font-medium">
+            Back to Blogs
+          </Link>
+        </div>
+      </div>
+    )
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setSubmitStatus(null)
-
-    try {
-      const result = await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID',
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID',
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message,
-        },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY'
-      )
-
-      if (result.text === 'OK') {
-        setSubmitStatus('success')
-        setFormData({ name: '', email: '', message: '' })
-      }
-    } catch (error) {
-      console.error('EmailJS Error:', error)
-      setSubmitStatus('error')
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
+  const breadcrumbLast = post.breadcrumbLabel ?? slug
+  const dateLine = post.dateDisplay ?? post.date
+  const readTimeLine = post.readTime
 
   return (
     <div className="bg-[#000000] pt-24">
-      {/* Breadcrumb */}
-      <div className="container mx-auto px-6 py-4">
-        <div className="flex items-center gap-2 text-sm text-gray-400">
-          <Link href="/blogs" className="hover:text-white transition-colors">
+      <div className="container mx-auto max-w-4xl px-6 pt-6 pb-4">
+        <nav className="flex flex-wrap items-center gap-2 text-sm text-gray-500" aria-label="Breadcrumb">
+          <Link
+            href="/"
+            className="inline-flex items-center text-gray-400 hover:text-white transition-colors"
+            aria-label="Home"
+          >
+            <Home className="h-4 w-4" strokeWidth={1.75} />
+          </Link>
+          <span className="text-gray-600 select-none" aria-hidden>
+            &gt;
+          </span>
+          <Link href="/blogs" className="text-gray-400 hover:text-white transition-colors">
             Blog
           </Link>
-          <span>&gt;</span>
-          <span className="text-white">{post.title}</span>
-        </div>
+          <span className="text-gray-600 select-none" aria-hidden>
+            &gt;
+          </span>
+          <span className="text-gray-400 truncate max-w-[min(100%,14rem)]">{breadcrumbLast}</span>
+        </nav>
       </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto max-w-7xl px-6 py-12">
-        <div className="flex flex-col lg:flex-row gap-12">
-          {/* Article Content - Left Column */}
-          <div className="flex-1 lg:w-2/3">
-            {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-              {post.title}
-            </h1>
+      <article className="container mx-auto max-w-4xl px-6 pb-8 md:pb-12">
+        <header className="mb-8">
+          <h1 className="text-3xl sm:text-4xl md:text-[2.65rem] font-bold text-white leading-[1.15] tracking-tight">
+            {post.title}
+          </h1>
 
-            {/* Metadata */}
-            <div className="flex flex-wrap items-center gap-6 mb-8 text-gray-400">
-              <div className="flex items-center gap-2">
-                <User className="w-4 h-4" />
-                <span className="text-sm">{post.author}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Tag className="w-4 h-4" />
-                <span className="text-sm">{post.category}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                <span className="text-sm">{post.date}</span>
-              </div>
-            </div>
-
-            {/* Hero Image */}
-            <div className="relative w-full h-96 md:h-[500px] mb-8 rounded-lg overflow-hidden">
-              <Image
-                src={post.heroImage}
-                alt={post.title}
-                fill
-                className="object-cover"
+          <div className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-2 text-sm text-gray-400">
+            <span className="inline-flex items-center gap-2">
+              <img
+                src="/images/logo.png"
+                alt=""
+                className="h-5 w-auto"
+                width={112}
+                height={22}
               />
-            </div>
-
-            {/* Article Content */}
-            <div className="prose prose-invert max-w-none">
-              <div className="text-gray-300 leading-relaxed space-y-6">
-                {post.content.split('\n').map((paragraph, index) => {
-                  if (paragraph.startsWith('## ')) {
-                    return (
-                      <h2 key={index} className="text-2xl font-bold text-white mt-8 mb-4">
-                        {paragraph.replace('## ', '')}
-                      </h2>
-                    )
-                  }
-                  if (paragraph.startsWith('### ')) {
-                    return (
-                      <h3 key={index} className="text-xl font-semibold text-white mt-6 mb-3">
-                        {paragraph.replace('### ', '')}
-                      </h3>
-                    )
-                  }
-                  if (paragraph.trim() === '') {
-                    return <br key={index} />
-                  }
-                  return (
-                    <p key={index} className="text-base text-gray-300 leading-relaxed">
-                      {paragraph}
-                    </p>
-                  )
-                })}
-              </div>
-            </div>
+            </span>
+            <span className="text-gray-600">•</span>
+            <span>{post.category}</span>
+            {readTimeLine && (
+              <>
+                <span className="text-gray-600">•</span>
+                <span>{readTimeLine}</span>
+              </>
+            )}
+            <span className="text-gray-600">•</span>
+            <span>{dateLine}</span>
           </div>
+        </header>
 
-          {/* Sidebar - Right Column - Contact Form */}
-          <div className="lg:w-1/3">
-            <div className="bg-gray-900/50 border border-white/10 rounded-lg p-6 sticky top-24">
-              <h3 className="text-xl font-semibold text-white mb-4">Get In Touch</h3>
-              
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Your Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#DC2626] transition-colors text-sm"
-                  />
-                </div>
-                
-                <div>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Your Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#DC2626] transition-colors text-sm"
-                  />
-                </div>
-                
-                <div>
-                  <textarea
-                    name="message"
-                    placeholder="Your Message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={4}
-                    className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#DC2626] transition-colors resize-none text-sm"
-                  />
-                </div>
-                
-                {submitStatus === 'success' && (
-                  <div className="p-3 bg-green-900/30 border border-green-600/50 rounded-lg text-green-400 text-sm">
-                    Message sent successfully!
-                  </div>
-                )}
-                
-                {submitStatus === 'error' && (
-                  <div className="p-3 bg-red-900/30 border border-red-600/50 rounded-lg text-red-400 text-sm">
-                    Failed to send message. Please try again.
-                  </div>
-                )}
-                
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white font-medium py-3 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
-                </button>
-              </form>
-            </div>
+        <div className="relative w-full aspect-[21/9] min-h-[220px] sm:min-h-[280px] md:min-h-[320px] mb-12 rounded-xl overflow-hidden bg-[#0a0a0a] ring-1 ring-white/[0.06]">
+          <Image
+            src={post.heroImage}
+            alt=""
+            fill
+            sizes="(max-width: 896px) 100vw, 896px"
+            className="object-cover"
+            priority
+          />
+        </div>
+
+        <div className="max-w-none">
+          <ArticleContent content={post.content} />
+        </div>
+      </article>
+
+      {relatedBlogs.filter((blog) => blog.slug !== slug).length > 0 && (
+        <div className="container mx-auto max-w-7xl px-6 py-16">
+          <div className="text-center mb-4">
+            <span className="text-xs text-gray-500 uppercase tracking-wider">RELATED BLOGS</span>
           </div>
-        </div>
-      </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-12">
+            Our latest news and articles
+          </h2>
 
-      {/* Related Blogs */}
-      <div className="container mx-auto max-w-7xl px-6 py-16">
-        <div className="text-center mb-4">
-          <span className="text-xs text-gray-500 uppercase tracking-wider">RELATED BLOGS</span>
-        </div>
-        <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-12">
-          Our latest news and articles
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {relatedBlogs.map((blog) => (
-            <Link key={blog.id} href={`/blogs/${blog.slug}`}>
-              <article className="bg-[#0a0a0a] rounded-lg overflow-hidden border border-white/5 hover:border-white/20 transition-all cursor-pointer group">
-                <div className="relative w-full h-48 overflow-hidden bg-gray-900">
-                  <Image
-                    src={blog.image}
-                    alt={blog.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-2 text-xs text-gray-500 mb-3 font-light">
-                    <span>{blog.category}</span>
-                    <span>•</span>
-                    <span>{blog.date}</span>
-                    <span>•</span>
-                    <span>{blog.readTime}</span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-[#DC2626] transition-colors">
-                    {blog.title}
-                  </h3>
-                  <div className="flex items-center gap-3">
-                    <div className="relative w-7 h-7 rounded-full overflow-hidden ring-1 ring-white/10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {relatedBlogs
+              .filter((blog) => blog.slug !== slug)
+              .map((blog) => (
+                <Link key={blog.id} href={`/blogs/${blog.slug}`}>
+                  <article className="bg-[#0a0a0a] rounded-lg overflow-hidden border border-white/5 hover:border-white/20 transition-all cursor-pointer group">
+                    <div className="relative w-full h-48 overflow-hidden bg-gray-900">
                       <Image
-                        src={blog.author.avatar}
-                        alt={blog.author.name}
+                        src={blog.image}
+                        alt={blog.title}
                         fill
-                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
-                    <span className="text-xs text-gray-400 font-light">
-                      {blog.author.name}
-                    </span>
-                  </div>
-                </div>
-              </article>
-            </Link>
-          ))}
+                    <div className="p-5">
+                      <div className="flex items-center gap-2 text-xs text-gray-500 mb-3 font-light">
+                        <span>{blog.category}</span>
+                        <span>•</span>
+                        <span>{blog.date}</span>
+                        <span>•</span>
+                        <span>{blog.readTime}</span>
+                      </div>
+                      <h3 className="text-lg font-semibold text-white mb-4 group-hover:text-[#DC2626] transition-colors">
+                        {blog.title}
+                      </h3>
+                      <div className="flex items-center gap-2.5">
+                        <img
+                          src="/images/logo.png"
+                          alt=""
+                          className="h-5 w-auto opacity-90"
+                          width={100}
+                          height={20}
+                        />
+                        <span className="text-xs text-gray-400 font-light">SentriMorph</span>
+                      </div>
+                    </div>
+                  </article>
+                </Link>
+              ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* FAQ Section */}
-      <div className="container mx-auto max-w-4xl px-6 py-16">
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-12">
-          Frequently Asked Questions
-        </h2>
-        
-        <div className="space-y-4">
-          {faqs.map((faq, index) => (
+      <section className="border-t border-white/[0.06] bg-black" aria-labelledby="blog-faq-heading">
+        <div className="container mx-auto max-w-6xl px-6 py-16 md:py-24">
+          <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#050505] shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
             <div
-              key={index}
-              className="bg-gray-900/50 border border-white/10 rounded-lg overflow-hidden"
-            >
-              <button
-                onClick={() => toggleFaq(index)}
-                className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-800/50 transition-colors"
-              >
-                <span className="text-white font-medium">{faq.question}</span>
-                {openFaq === index ? (
-                  <Minus className="w-5 h-5 text-white" />
-                ) : (
-                  <Plus className="w-5 h-5 text-white" />
-                )}
-              </button>
-              {openFaq === index && (
-                <div className="px-6 py-4 border-t border-white/10">
-                  <p className="text-gray-400 leading-relaxed">{faq.answer}</p>
-                </div>
-              )}
+              className="pointer-events-none absolute left-0 top-0 bottom-0 w-[3px] sm:w-1 bg-gradient-to-b from-[#9f2d45] via-[#5c1a2a] to-[#1a0508] opacity-90"
+              aria-hidden
+            />
+            <div
+              className="pointer-events-none absolute -left-24 top-1/2 h-[120%] w-48 -translate-y-1/2 rounded-full bg-[#6b2035]/25 blur-3xl"
+              aria-hidden
+            />
+
+            <div className="relative grid gap-12 lg:grid-cols-2 lg:gap-16 px-6 py-10 sm:px-10 sm:py-12 md:px-12 md:py-14 pl-8 sm:pl-12">
+              <div className="lg:pr-4">
+                <h2
+                  id="blog-faq-heading"
+                  className="text-3xl sm:text-4xl md:text-[2.5rem] font-bold text-white leading-tight tracking-tight"
+                >
+                  Frequently Asked Questions
+                </h2>
+              </div>
+
+              <div className="min-w-0 divide-y divide-white/[0.08]">
+                {faqs.map((faq, index) => (
+                  <div key={index} className="first:pt-0">
+                    <button
+                      type="button"
+                      onClick={() => toggleFaq(index)}
+                      className="flex w-full items-start justify-between gap-4 py-5 text-left transition-colors hover:bg-white/[0.02] sm:py-[1.125rem]"
+                      aria-expanded={openFaq === index}
+                    >
+                      <span className="text-[15px] sm:text-base font-medium text-white leading-snug pr-2">
+                        {faq.question}
+                      </span>
+                      <span className="shrink-0 pt-0.5 text-white/90">
+                        {openFaq === index ? (
+                          <Minus className="h-5 w-5" strokeWidth={1.75} />
+                        ) : (
+                          <Plus className="h-5 w-5" strokeWidth={1.75} />
+                        )}
+                      </span>
+                    </button>
+                    {openFaq === index && (
+                      <div className="pb-5 pt-0">
+                        <p className="text-sm sm:text-[15px] text-gray-400 leading-relaxed">
+                          {faq.answer}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }

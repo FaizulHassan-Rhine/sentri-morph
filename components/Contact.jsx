@@ -1,22 +1,39 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Mail } from 'lucide-react'
+import { Mail, ChevronDown } from 'lucide-react'
 import emailjs from '@emailjs/browser'
+
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_rtyqz4m'
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'template_v65ewej'
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '2pksZhy_CdsM-h4my'
 
 export default function Contact() {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
+    company: '',
+    phone: '',
+    location: '',
+    service: '',
     message: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
 
   useEffect(() => {
-    // Initialize EmailJS - replace with your actual public key
-    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY')
+    emailjs.init(EMAILJS_PUBLIC_KEY)
   }, [])
+
+  useEffect(() => {
+    if (!submitStatus) return
+
+    const timeoutId = setTimeout(() => {
+      setSubmitStatus(null)
+    }, 3000)
+
+    return () => clearTimeout(timeoutId)
+  }, [submitStatus])
 
   const handleChange = (e) => {
     setFormData({
@@ -31,21 +48,32 @@ export default function Contact() {
     setSubmitStatus(null)
 
     try {
-      // Replace with your EmailJS service ID, template ID, and public key
       const result = await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID',
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID',
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
         {
           from_name: formData.username,
           from_email: formData.email,
-          message: formData.message,
+          company: formData.company,
+          phone: formData.phone,
+          location: formData.location,
+          service: formData.service,
+          message: `Service: ${formData.service || 'N/A'}\nCompany: ${formData.company || 'N/A'}\nPhone: ${formData.phone || 'N/A'}\nLocation: ${formData.location || 'N/A'}\n\n${formData.message}`,
         },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY'
+        EMAILJS_PUBLIC_KEY
       )
 
       if (result.text === 'OK') {
         setSubmitStatus('success')
-        setFormData({ username: '', email: '', message: '' })
+        setFormData({
+          username: '',
+          email: '',
+          company: '',
+          phone: '',
+          location: '',
+          service: '',
+          message: '',
+        })
       }
     } catch (error) {
       console.error('EmailJS Error:', error)
@@ -58,33 +86,37 @@ export default function Contact() {
   return (
     <section id="contact" className="py-24 px-6">
       <div className="container mx-auto max-w-7xl">
-        <div className="grid md:grid-cols-2 gap-12">
+        <div className="grid md:grid-cols-2 gap-14 md:gap-16 items-start">
           {/* Left side - Contact Info */}
-          <div>
-            <div className="flex items-center gap-2 mb-6">
-              <Mail className="w-5 h-5 text-white" />
-              <span className="text-white font-medium">Contact Us</span>
+          <div className="pt-1">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/15 bg-white/[0.02] mb-6">
+              <Mail className="w-4 h-4 text-white" />
+              <span className="text-white text-sm font-medium">Contact us</span>
             </div>
             
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-5">
               Get in touch
             </h2>
             
-            <p className="text-lg text-gray-300 mb-6 leading-relaxed">
+            <p className="text-lg text-gray-300 mb-14 leading-relaxed max-w-xl">
               Please feel free to send us any questions, feedback or suggestions you might have.
             </p>
-            
-            <p className="text-gray-300 leading-relaxed">
-              Each sector faces different threat vectors - but all demand one thing: trust. 
-              SentriMorph builds that trust through intelligent automation, adaptive security, 
-              and constant vigilance - keeping your business, your data, and your customers protected.
-            </p>
+
+            <div className="max-w-[420px] border-l border-white/12 pl-5">
+              <p className="text-white font-medium text-xl md:text-[1.4rem] leading-tight mb-4">
+                Each sector faces different threat vectors - but all demand one thing: trust.
+              </p>
+              <p className="text-gray-300 leading-relaxed text-lg">
+                SentriMorph builds that trust through intelligent automation, adaptive security,
+                and constant vigilance - keeping your business, your data, and your customers protected.
+              </p>
+            </div>
           </div>
 
           {/* Right side - Contact Form */}
-          <div className="bg-gray-900/50 border border-white/10 rounded-lg p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
+          <div className="bg-[#08090c] border border-white/10 rounded-xl p-6 md:p-7 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <input
                   type="text"
                   name="username"
@@ -92,11 +124,8 @@ export default function Contact() {
                   value={formData.username}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#DC2626] transition-colors"
+                  className="w-full px-4 py-3 bg-black/60 border border-[#2a2f37] rounded-md text-white placeholder-gray-500 focus:outline-none focus:border-[#3c4552] transition-colors"
                 />
-              </div>
-              
-              <div>
                 <input
                   type="email"
                   name="email"
@@ -104,10 +133,54 @@ export default function Contact() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#DC2626] transition-colors"
+                  className="w-full px-4 py-3 bg-black/60 border border-[#2a2f37] rounded-md text-white placeholder-gray-500 focus:outline-none focus:border-[#3c4552] transition-colors"
                 />
+                <input
+                  type="text"
+                  name="company"
+                  placeholder="Company"
+                  value={formData.company}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-black/60 border border-[#2a2f37] rounded-md text-white placeholder-gray-500 focus:outline-none focus:border-[#3c4552] transition-colors"
+                />
+                <input
+                  type="text"
+                  name="phone"
+                  placeholder="Phone (Optional)"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-black/60 border border-[#2a2f37] rounded-md text-white placeholder-gray-500 focus:outline-none focus:border-[#3c4552] transition-colors"
+                />
+                <input
+                  type="text"
+                  name="location"
+                  placeholder="Location (Optional)"
+                  value={formData.location}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-black/60 border border-[#2a2f37] rounded-md text-white placeholder-gray-500 focus:outline-none focus:border-[#3c4552] transition-colors"
+                />
+                <div className="relative">
+                  <select
+                    name="service"
+                    value={formData.service}
+                    onChange={handleChange}
+                    required
+                    className="w-full appearance-none px-4 pr-12 py-3 bg-[#0a0c10] border border-[#2a2f37] rounded-md text-white font-medium tracking-[0.01em] focus:outline-none focus:border-[#3c4552] focus:ring-1 focus:ring-[#3c4552]/40 transition-all"
+                  >
+                    <option value="" disabled className="text-gray-500">
+                      Select a Service
+                    </option>
+                    <option value="penetration-testing">Penetration Testing</option>
+                    <option value="threat-response">Threat Response & Intelligence</option>
+                    <option value="emerging-security">Emerging & Specialized Security</option>
+                  </select>
+                  <ChevronDown
+                    className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-gray-300"
+                    strokeWidth={1.9}
+                  />
+                </div>
               </div>
-              
+
               <div>
                 <textarea
                   name="message"
@@ -115,8 +188,8 @@ export default function Contact() {
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  rows={6}
-                  className="w-full px-4 py-3 bg-gray-800/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-red-600 transition-colors resize-none"
+                  rows={7}
+                  className="w-full px-4 py-3 bg-black/60 border border-[#2a2f37] rounded-md text-white placeholder-gray-500 focus:outline-none focus:border-[#3c4552] transition-colors resize-none"
                 />
               </div>
               
@@ -135,7 +208,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#DC2626] hover:bg-[#EF4444] text-white font-medium py-3 px-6 rounded-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-[#B81F54] hover:bg-[#C9265F] text-white font-semibold py-3.5 px-6 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>

@@ -1,6 +1,6 @@
 'use client'
 
-import { Shield, Twitter, Linkedin, Facebook, Instagram, Youtube } from 'lucide-react'
+import { Linkedin, Facebook } from 'lucide-react'
 import Link from 'next/link'
 
 export default function Footer() {
@@ -70,20 +70,23 @@ export default function Footer() {
           </p>
           
           <div className="flex items-center gap-4">
-            <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-              <Twitter className="w-5 h-5" />
-            </Link>
-            <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+            <Link
+              href="https://www.linkedin.com/company/sentrimorph/posts/?feedView=all"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+              aria-label="SentriMorph LinkedIn"
+            >
               <Linkedin className="w-5 h-5" />
             </Link>
-            <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+            <Link
+              href="https://www.facebook.com/share/12H2b2AdA3r/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 hover:text-white transition-colors"
+              aria-label="SentriMorph Facebook"
+            >
               <Facebook className="w-5 h-5" />
-            </Link>
-            <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-              <Instagram className="w-5 h-5" />
-            </Link>
-            <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-              <Youtube className="w-5 h-5" />
             </Link>
           </div>
         </div>

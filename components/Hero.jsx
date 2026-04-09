@@ -6,7 +6,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-[100svh] flex-col items-center overflow-hidden bg-[#030102] px-6 pb-8 pt-28 md:pb-12 md:pt-32"
+      className="relative flex  flex-col items-center overflow-hidden bg-[#030102] px-6 pb-8 pt-28 md:pb-12 md:pt-32"
     >
       {/* Maroon dot mesh + glow — static, top 50% only */}
       <div
